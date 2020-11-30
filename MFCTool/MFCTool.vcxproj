@@ -199,6 +199,7 @@
     <ClInclude Include="MFCToolDoc.h" />
     <ClInclude Include="MFCToolView.h" />
     <ClInclude Include="MiniView.h" />
+    <ClInclude Include="MonsterTool.h" />
     <ClInclude Include="Multi_Texture.h" />
     <ClInclude Include="MyFormView.h" />
     <ClInclude Include="Resource.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="MFCToolDoc.cpp" />
     <ClCompile Include="MFCToolView.cpp" />
     <ClCompile Include="MiniView.cpp" />
+    <ClCompile Include="MonsterTool.cpp" />
     <ClCompile Include="Multi_Texture.cpp" />
     <ClCompile Include="MyFormView.cpp" />
     <ClCompile Include="Single_Texture.cpp" />

@@ -26,6 +26,7 @@ void CMyFormView::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMyFormView, CFormView)
+	ON_BN_CLICKED(IDC_BUTTON1, &CMyFormView::MonsterToolButton)
 END_MESSAGE_MAP()
 
 
@@ -47,3 +48,18 @@ void CMyFormView::Dump(CDumpContext& dc) const
 
 
 // CMyFormView 메시지 처리기입니다.
+
+
+void CMyFormView::MonsterToolButton()
+{
+	m_tMonsterTool.ShowWindow(SW_SHOW);
+}
+
+
+void CMyFormView::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	if (nullptr == m_tMonsterTool.GetSafeHwnd())
+		m_tMonsterTool.Create(IDD_MONSTERTOOL);
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+}
