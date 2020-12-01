@@ -36,4 +36,10 @@ public:
 	int m_iTileSizeY;
 	int m_iTileCountX;
 	int m_iTileCountY;
+	int m_iDrawID2;
+	afx_msg void OnBnClickedCheckViewIndex();
+	CButton m_ViewIndex;
+	afx_msg void OnBnClickedButtonSave();
+	afx_msg void OnBnClickedButtonLoad();
+	afx_msg void OnBnClickedButtonDeleteAll();
 };

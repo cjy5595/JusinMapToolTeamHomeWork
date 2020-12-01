@@ -171,33 +171,8 @@ void CTerrain::Render_Terrain()
 			Set_Ratio(matWorld, fRatioX, fRatioY);
 			CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0.f), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
-			CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
-		}
-	}
-}
-
-void CTerrain::MiniRender_Terrain()
-{
-	int iIndex = 0;
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			iIndex = j + (i * TILEX);
-			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_vecTile[iIndex]->byDrawID);
-			if (nullptr == pTexInfo)
-				return;
-
-			float fCenterX = float(pTexInfo->tImageInfo.Width >> 1);
-			float fCenterY = float(pTexInfo->tImageInfo.Height >> 1);
-
-			D3DXMATRIX matScale, matTrans, matWorld;
-			D3DXMatrixScaling(&matScale, m_vecTile[iIndex]->vSize.x, m_vecTile[iIndex]->vSize.y, 0.f);
-			D3DXMatrixTranslation(&matTrans, m_vecTile[iIndex]->vPos.x - m_pView->GetScrollPos(0), m_vecTile[iIndex]->vPos.y - m_pView->GetScrollPos(1), 0.f);
-			matWorld = matScale * matTrans;
-			Set_Ratio(matWorld, 0.3f, 0.3f);
-			CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			if (m_bText)
+				CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
 }
