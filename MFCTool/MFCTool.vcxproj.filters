@@ -158,9 +158,6 @@
     <ClCompile Include="TextureMgr.cpp">
       <Filter>소스 파일\03.Texture\00.TextureMgr</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>소스 파일\04.Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="MyFormView.cpp">
       <Filter>소스 파일\01.View\01.FormView</Filter>
     </ClCompile>
@@ -175,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>소스 파일\01.View\01.FormView</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\04.Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

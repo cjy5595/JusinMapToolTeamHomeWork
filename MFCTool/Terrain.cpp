@@ -115,18 +115,24 @@ HRESULT CTerrain::Ready_Terrain()
 	float fCenterX = 0.f, fCenterY = 0.f;
 	TILE* pTile = nullptr;
 	m_vecTile.reserve(m_iTileCountX * m_iTileCountY);
+	const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_iDrawID);
+	if (nullptr == pTexInfo)
+		return E_FAIL;
+
+	float fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
+	float fTileCY = float(pTexInfo->tImageInfo.Height);
+
 
 	for (int i = 0; i < m_iTileCountY; ++i)
 	{
 		for (int j = 0; j < m_iTileCountX; ++j)
 		{
 			pTile = new TILE;
-			pTile->vSize = { (float)m_iTileSizeX  , (float)m_iTileSizeY, 0.f };
+			pTile->vSize = { (float)m_iTileSizeX / fTileCX  , (float)m_iTileSizeY / fTileCY, 0.f }; // 1-1
 			pTile->byDrawID = m_iDrawID;
 			pTile->byOption = m_iOption;
 			fCenterX = float(j * m_iTileSizeX);
-			fCenterY = float(i * m_iTileSizeY);
-			//오 천재. 감사염. 
+			fCenterY = float(i * m_iTileSizeX);
 			pTile->vPos = { fCenterX,fCenterY, 0.f };
 			m_vecTile.emplace_back(pTile);
 		}
