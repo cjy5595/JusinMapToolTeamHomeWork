@@ -18,7 +18,7 @@ CMyFormView::CMyFormView()
 
 CMyFormView::~CMyFormView()
 {
-	SAFE_DELETE(m_tTileTool.m_pTerrain);
+
 }
 
 void CMyFormView::DoDataExchange(CDataExchange* pDX)
