@@ -55,6 +55,9 @@
     <Filter Include="소스 파일\01.View\03.MonsterTool">
       <UniqueIdentifier>{3191fd35-3227-48f5-a8e1-bc85fc850ea1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\01.View\04.TileTool">
+      <UniqueIdentifier>{4ee326a0-ef36-4842-978a-7a676a0b2f6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -117,6 +120,12 @@
     <ClInclude Include="MonsterTool.h">
       <Filter>소스 파일\01.View\03.MonsterTool</Filter>
     </ClInclude>
+    <ClInclude Include="TileTool.h">
+      <Filter>소스 파일\01.View\04.TileTool</Filter>
+    </ClInclude>
+    <ClInclude Include="FileInfo.h">
+      <Filter>소스 파일\01.View\01.FormView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -160,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="MonsterTool.cpp">
       <Filter>소스 파일\01.View\03.MonsterTool</Filter>
+    </ClCompile>
+    <ClCompile Include="TileTool.cpp">
+      <Filter>소스 파일\01.View\04.TileTool</Filter>
+    </ClCompile>
+    <ClCompile Include="FileInfo.cpp">
+      <Filter>소스 파일\01.View\01.FormView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

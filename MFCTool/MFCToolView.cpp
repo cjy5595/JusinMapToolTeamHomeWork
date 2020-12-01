@@ -11,6 +11,7 @@
 
 #include "MFCToolDoc.h"
 #include "MFCToolView.h"
+#include "MyFormView.h"
 #include "Graphic_Device.h"
 #include "TextureMgr.h"
 #include "MainFrm.h"
@@ -35,7 +36,7 @@ END_MESSAGE_MAP()
 // CMFCToolView 생성/소멸
 
 CMFCToolView::CMFCToolView()
-	:m_pTerrain(nullptr)
+
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -43,8 +44,8 @@ CMFCToolView::CMFCToolView()
 
 CMFCToolView::~CMFCToolView()
 {
-	if (m_pTerrain)
-		SAFE_DELETE(m_pTerrain);
+	/*if (m_pTerrain)
+		SAFE_DELETE(m_pTerrain);*/
 
 	CTextureMgr::Destroy_Instance();
 	CGraphic_Device::Destroy_Instance();
@@ -66,13 +67,18 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+	CMainFrame * pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMyFormView * pFormView = dynamic_cast<CMyFormView*>(pMain->m_SecondSplitter.GetPane(1, 0));
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	CGraphic_Device::Get_Instance()->Render_Begin();
-
-	m_pTerrain->Render_Terrain();
-
+	//this;
+	if(pFormView->m_tTileTool.m_pTerrain)
+		pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
+	//InvalidateRect(nullptr, FALSE);
+	
 	CGraphic_Device::Get_Instance()->Render_End();
+	
 }
 
 
@@ -143,16 +149,16 @@ void CMFCToolView::OnInitialUpdate()
 		ERR_MSG(L"Ready Graphic Device failed");
 		return;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture_Manager(CTextureMgr::MULTI_TEX, L"../Texture/Images/Tile/Tile%d.png", L"Terrain", L"Tile", 124)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture_Manager(CTextureMgr::MULTI_TEX, L"../Texture/Images/Tile/Tile%d.png", L"Terrain", L"Tile", 0)))
 	{
 		ERR_MSG(L"Insert Tile Texture failed");
 		return;
 	}
-	if (!m_pTerrain)
+	/*if (!m_pTerrain)
 	{
 		m_pTerrain = new CTerrain;
 		m_pTerrain->Ready_Terrain();
 		m_pTerrain->Set_View(this);
-	}
+	}*/
 
 }

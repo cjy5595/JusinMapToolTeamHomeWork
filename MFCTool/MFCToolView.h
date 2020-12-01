@@ -4,7 +4,7 @@
 
 #pragma once
 
-class CTerrain;
+
 class CMFCToolDoc;
 class CMFCToolView : public CScrollView
 {
@@ -15,7 +15,7 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CMFCToolDoc* GetDocument() const;
-	CTerrain* m_pTerrain;
+	//CTerrain* m_pTerrain;
 	
 // 작업입니다.
 public:

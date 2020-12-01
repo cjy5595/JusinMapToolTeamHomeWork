@@ -112,22 +112,22 @@ bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & iIndex)
 HRESULT CTerrain::Ready_Terrain()
 {
 	// 일단. 우리 규칙 찾자. 
-	float fX = 0.f, fY = 0.f;
+	float fCenterX = 0.f, fCenterY = 0.f;
 	TILE* pTile = nullptr;
-	m_vecTile.reserve(TILEX * TILEY);
+	m_vecTile.reserve(m_iTileCountX * m_iTileCountY);
 
-	for (int i = 0; i < TILEY; ++i)
+	for (int i = 0; i < m_iTileCountY; ++i)
 	{
-		for (int j = 0; j < TILEX; ++j)
+		for (int j = 0; j < m_iTileCountX; ++j)
 		{
 			pTile = new TILE;
-			pTile->vSize = { 1.f , 1.f, 0.f };
-			pTile->byDrawID = 115;
-			pTile->byOption = 0;
-			fX = float(j * TILECX);
-			fY = float(i * TILECY);
+			pTile->vSize = { (float)m_iTileSizeX  , (float)m_iTileSizeY, 0.f };
+			pTile->byDrawID = m_iDrawID;
+			pTile->byOption = m_iOption;
+			fCenterX = float(j * m_iTileSizeX);
+			fCenterY = float(i * m_iTileSizeY);
 			//오 천재. 감사염. 
-			pTile->vPos = { fX, fY, 0.f };
+			pTile->vPos = { fCenterX,fCenterY, 0.f };
 			m_vecTile.emplace_back(pTile);
 		}
 	}
@@ -144,13 +144,13 @@ void CTerrain::Render_Terrain()
 	SetRect(&rcView, 0, 0, rcView.right - rcView.left, rcView.bottom - rcView.top);
 	float fRatioX = float(WINCX) / rcView.right;
 	float fRatioY = float(WINCY) / rcView.bottom;
-	for (int i = 0; i < TILEY; ++i)
+	for (int i = 0; i < m_iTileCountY; ++i)
 	{
-		for (int j = 0; j < TILEX; ++j)
+		for (int j = 0; j < m_iTileCountX; ++j)
 		{
-			iIndex = j + (i * TILEX);
+			iIndex = j + (i * m_iTileCountX);
 			swprintf_s(szBuf, L"%d", iIndex);
-			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_vecTile[iIndex]->byDrawID);
+			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_iDrawID);
 			if (nullptr == pTexInfo)
 				return;
 

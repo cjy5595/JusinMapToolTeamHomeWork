@@ -34,11 +34,11 @@ void CMiniView::OnDraw(CDC* pDC)
 	CDocument* pDoc = GetDocument();
 	// TODO: 여기에 그리기 코드를 추가합니다.
 	CGraphic_Device::Get_Instance()->Render_Begin();
-	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	/*CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
 	
 	CTerrain* pTerrain = pView->m_pTerrain;
-	pTerrain->MiniRender_Terrain();
+	pTerrain->MiniRender_Terrain();*/
 	CGraphic_Device::Get_Instance()->Render_End(m_hWnd);
 }
 

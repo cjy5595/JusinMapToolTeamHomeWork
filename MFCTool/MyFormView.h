@@ -4,6 +4,7 @@
 
 // CMyFormView 폼 뷰입니다.
 #include "MonsterTool.h"
+#include "TileTool.h"
 class CMyFormView : public CFormView
 {
 	DECLARE_DYNCREATE(CMyFormView)
@@ -24,6 +25,7 @@ public:
 #endif
 public:
 	CMonsterTool m_tMonsterTool;
+	CTileTool	 m_tTileTool;
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -31,6 +33,7 @@ protected:
 public:
 	afx_msg void MonsterToolButton();
 	virtual void OnInitialUpdate();
+	afx_msg void TileToolButton();
 };
 
 

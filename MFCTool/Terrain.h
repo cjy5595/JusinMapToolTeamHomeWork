@@ -21,5 +21,15 @@ public:
 private:
 	CMFCToolView* m_pView;
 	vector<TILE*> m_vecTile;
+public:
+	int m_iTileCountX = 0;
+	int m_iTileCountY = 0;
+
+	int m_iTileSizeX = 0;
+	int m_iTileSizeY = 0;
+
+	int m_iDrawID = 0;
+	int m_iOption = 0;
+
 };
 
