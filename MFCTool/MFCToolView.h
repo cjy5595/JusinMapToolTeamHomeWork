@@ -18,6 +18,7 @@ public:
 	CMFCToolDoc* GetDocument() const;
 	//CTerrain* m_pTerrain;
 	CMyFormView * m_pFormView;
+	
 // 작업입니다.
 public:
 
