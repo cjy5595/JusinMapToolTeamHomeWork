@@ -38,7 +38,8 @@
 #include <vector>
 #include <list>
 #include <map>
-
+#include <algorithm>
+#include <functional>
 using namespace std;
 
 #include "d3d9.h"

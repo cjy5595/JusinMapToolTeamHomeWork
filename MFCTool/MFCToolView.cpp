@@ -16,7 +16,7 @@
 #include "TextureMgr.h"
 #include "MainFrm.h"
 #include "Terrain.h" 
-
+#include "Item.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -150,9 +150,17 @@ void CMFCToolView::OnInitialUpdate()
 		ERR_MSG(L"Ready Graphic Device failed");
 		return;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture_Manager(CTextureMgr::MULTI_TEX, L"../Texture/Images/Tile/Tile%d.png", L"Terrain", L"Tile", 123)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture_Manager(CTextureMgr::MULTI_TEX, 
+		L"../Texture/Images/Tile/Tile%d.png", L"Terrain", L"Tile",
+		123)))
 	{
 		ERR_MSG(L"Insert Tile Texture failed");
+		return;
+	}
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture_Manager(CTextureMgr::MULTI_TEX,
+		L"../Texture/Item/MfcItem/Item%d.png", L"Item", L"Weapon", 4)))
+	{
+		ERR_MSG(L"Insert Item(Weapon) Texture failed");
 		return;
 	}
 	/*if (!m_pTerrain)
