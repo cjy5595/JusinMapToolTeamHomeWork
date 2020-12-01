@@ -6,6 +6,7 @@
 
 
 class CMFCToolDoc;
+class CMyFormView;
 class CMFCToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -16,7 +17,7 @@ protected: // serialization에서만 만들어집니다.
 public:
 	CMFCToolDoc* GetDocument() const;
 	//CTerrain* m_pTerrain;
-	
+	CMyFormView * m_pFormView;
 // 작업입니다.
 public:
 
