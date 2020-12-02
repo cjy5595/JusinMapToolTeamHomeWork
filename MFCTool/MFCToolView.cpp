@@ -31,6 +31,7 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -170,4 +171,21 @@ void CMFCToolView::OnInitialUpdate()
 		m_pTerrain->Set_View(this);
 	}*/
 
+}
+
+
+void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	D3DXVECTOR3 vMouse = { (float)point.x +GetScrollPos(0), (float)point.y + GetScrollPos(1), 0.f };
+
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
+	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
+	int iDrawID = pFormView->m_tTileTool.m_iDrawID;
+	pTerrain->TileChange(vMouse, iDrawID);
+	
+	InvalidateRect(nullptr, FALSE);
+
+	CScrollView::OnLButtonDown(nFlags, point);
 }

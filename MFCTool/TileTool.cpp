@@ -178,8 +178,13 @@ void CTileTool::OnBnClickedCheckViewIndex()
 void CTileTool::OnBnClickedButtonSave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CFileDialog Dlg(FALSE, L"dat", L"*.dat",
-		OFN_OVERWRITEPROMPT, L"Data File(*dat) | *.dat||",
+
+	vector<TILE*>& rvecTile = m_pTerrain->Get_vecTile();
+	CFileDialog Dlg(FALSE, 
+		L"dat", 
+		L"*.dat",
+		OFN_OVERWRITEPROMPT, 
+		L"Data File(*dat) | *.dat||",
 		this);
 	TCHAR szPath[MAX_PATH] = L"";
 	GetCurrentDirectory(MAX_PATH, szPath);
@@ -195,15 +200,13 @@ void CTileTool::OnBnClickedButtonSave()
 			ERR_MSG(L"저장 실패");
 			return;
 		}
-
+		
 		DWORD dwByte = 0;
-		for (auto& pTile : m_pTerrain->Get_vecTile())
+		for (auto& pTile : rvecTile)
 		{
-			WriteFile(hFile, &pTile->byDrawID, sizeof(BYTE), &dwByte, nullptr);
-			WriteFile(hFile, &pTile->byOption, sizeof(BYTE), &dwByte, nullptr);
-			WriteFile(hFile, &pTile->vPos, sizeof(D3DXVECTOR3), &dwByte, nullptr);
-			WriteFile(hFile, &pTile->vSize, sizeof(D3DXVECTOR3), &dwByte, nullptr);
+			WriteFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
 		}
+
 		CloseHandle(hFile);
 	}
 
@@ -213,9 +216,6 @@ void CTileTool::OnBnClickedButtonSave()
 void CTileTool::OnBnClickedButtonLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//for (auto& pTile : m_pTerrain->Get_vecTile())
-	//	Safe_Delete(pTile);
-	//m_pTerrain->Get_vecTile().clear();
 
 	CFileDialog Dlg(TRUE, L"dat", L"*.dat",
 		OFN_OVERWRITEPROMPT, L"Data File(*dat) | *.dat||",
@@ -227,26 +227,29 @@ void CTileTool::OnBnClickedButtonLoad()
 	Dlg.m_ofn.lpstrInitialDir = szPath;
 	if (Dlg.DoModal())
 	{
-		CString wstrFilePath = Dlg.GetPathName();
-		HANDLE hFile = CreateFile(wstrFilePath.GetString(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		HANDLE hFile = CreateFile(Dlg.GetPathName(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (INVALID_HANDLE_VALUE == hFile)
 		{
 			ERR_MSG(L"불러오기 실패");
 			return;
 		}
 
+		if (m_pTerrain)
+			m_pTerrain->Release_Terrain();
+
 		DWORD dwByte = 0;
 		TILE* pTile = nullptr;
+
 		while (true)
 		{
 			pTile = new TILE;
-			ReadFile(hFile, &pTile->byDrawID, sizeof(BYTE), &dwByte, nullptr);
-			ReadFile(hFile, &pTile->byOption, sizeof(BYTE), &dwByte, nullptr);
-			ReadFile(hFile, &pTile->vPos, sizeof(D3DXVECTOR3), &dwByte, nullptr);
-			ReadFile(hFile, &pTile->vSize, sizeof(D3DXVECTOR3), &dwByte, nullptr);
+			ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
 
 			if (0 == dwByte)
+			{
 				Safe_Delete(pTile);
+				return;
+			}
 			m_pTerrain->Get_vecTile().emplace_back(pTile);
 		}
 		CloseHandle(hFile);
@@ -257,5 +260,13 @@ void CTileTool::OnBnClickedButtonLoad()
 void CTileTool::OnBnClickedButtonDeleteAll()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
+	UpdateData(TRUE);
+
 	m_pTerrain->Release_Terrain();
+	SAFE_DELETE(m_pTerrain);
+
+	pView->InvalidateRect(nullptr, FALSE);
+	UpdateData(FALSE);
 }
