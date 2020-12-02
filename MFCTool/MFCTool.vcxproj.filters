@@ -49,9 +49,6 @@
     <Filter Include="소스 파일\01.View\01.FormView">
       <UniqueIdentifier>{29fcc5cb-4b4b-4535-8c87-da51e64f930a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\01.View\02.MiniView">
-      <UniqueIdentifier>{865443a4-2a52-4790-b498-4ae7706251dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\01.View\03.MonsterTool">
       <UniqueIdentifier>{3191fd35-3227-48f5-a8e1-bc85fc850ea1}</UniqueIdentifier>
     </Filter>
@@ -120,9 +117,6 @@
     <ClInclude Include="MyFormView.h">
       <Filter>소스 파일\01.View\01.FormView</Filter>
     </ClInclude>
-    <ClInclude Include="MiniView.h">
-      <Filter>소스 파일\01.View\02.MiniView</Filter>
-    </ClInclude>
     <ClInclude Include="MonsterTool.h">
       <Filter>소스 파일\01.View\03.MonsterTool</Filter>
     </ClInclude>
@@ -170,14 +164,8 @@
     <ClCompile Include="TextureMgr.cpp">
       <Filter>소스 파일\03.Texture\00.TextureMgr</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>소스 파일\04.Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="MyFormView.cpp">
       <Filter>소스 파일\01.View\01.FormView</Filter>
-    </ClCompile>
-    <ClCompile Include="MiniView.cpp">
-      <Filter>소스 파일\01.View\02.MiniView</Filter>
     </ClCompile>
     <ClCompile Include="MonsterTool.cpp">
       <Filter>소스 파일\01.View\03.MonsterTool</Filter>
@@ -185,11 +173,22 @@
     <ClCompile Include="TileTool.cpp">
       <Filter>소스 파일\01.View\04.TileTool</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="FileInfo.cpp">
+      <Filter>소스 파일\01.View\01.FormView</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\04.Terrain</Filter>
+=======
+>>>>>>> 695896db6081f36551ffdb625e6061b1982ca4d7
     <ClCompile Include="Item.cpp">
       <Filter>소스 파일\05.Item</Filter>
     </ClCompile>
     <ClCompile Include="ItemTool.cpp">
       <Filter>소스 파일\01.View\01.FormView</Filter>
+>>>>>>> ef341934a8d00947387018a3ce9af49dddda8f8b
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>소스 파일\01.View\05.FileInfo</Filter>

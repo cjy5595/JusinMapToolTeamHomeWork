@@ -31,6 +31,7 @@ BEGIN_MESSAGE_MAP(CMFCToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMFCToolView 생성/소멸
@@ -68,11 +69,11 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 	CMainFrame * pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
-	m_pFormView = dynamic_cast<CMyFormView*>(pMain->m_SecondSplitter.GetPane(1, 0));
+	m_pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	CGraphic_Device::Get_Instance()->Render_Begin();
-	//this;
+
 	if(m_pFormView->m_tTileTool.m_pTerrain)
 		m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
 	//InvalidateRect(nullptr, FALSE);
@@ -130,9 +131,10 @@ void CMFCToolView::OnInitialUpdate()
 	CScrollView::OnInitialUpdate();
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	SetScrollSizes(MM_TEXT, CSize(TILECX * TILECX, TILECY * TILEY));
+	CMainFrame * pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 
-	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	SetScrollSizes(MM_TEXT, CSize(WINCX , WINCY));
+
 	RECT rcMainRect = {};
 	pMain->GetWindowRect(&rcMainRect);
 
@@ -169,4 +171,21 @@ void CMFCToolView::OnInitialUpdate()
 		m_pTerrain->Set_View(this);
 	}*/
 
+}
+
+
+void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	D3DXVECTOR3 vMouse = { (float)point.x +GetScrollPos(0), (float)point.y + GetScrollPos(1), 0.f };
+
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
+	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
+	int iDrawID = pFormView->m_tTileTool.m_iDrawID;
+	pTerrain->TileChange(vMouse, iDrawID);
+	
+	InvalidateRect(nullptr, FALSE);
+
+	CScrollView::OnLButtonDown(nFlags, point);
 }

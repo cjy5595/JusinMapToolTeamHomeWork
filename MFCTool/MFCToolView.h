@@ -46,6 +46,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MFCToolView.cpp의 디버그 버전

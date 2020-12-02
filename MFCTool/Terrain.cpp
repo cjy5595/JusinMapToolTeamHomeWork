@@ -61,12 +61,13 @@ bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & iIndex)
 {
 	//////////////////////////내적을 이용한 방법.////////////////////////////////////////////////
 	// 챕터 1. 마름모꼴을 구해내라!
+
 	D3DXVECTOR3 vVertex[4] =
 	{
-		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y + (TILECY * 0.5f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x + (TILECX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
-		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y - (TILECY * 0.5f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x - (TILECX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
+		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+		{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
+		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+		{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
 	};
 	// 챕터 2. 방향벡터 그것도 마름모꼴의 방향벡터. 
 
@@ -119,20 +120,19 @@ HRESULT CTerrain::Ready_Terrain()
 	if (nullptr == pTexInfo)
 		return E_FAIL;
 
-	float fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
-	float fTileCY = float(pTexInfo->tImageInfo.Height);
-
+	m_fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
+	m_fTileCY = float(pTexInfo->tImageInfo.Height);
 
 	for (int i = 0; i < m_iTileCountY; ++i)
 	{
 		for (int j = 0; j < m_iTileCountX; ++j)
 		{
 			pTile = new TILE;
-			pTile->vSize = { (float)m_iTileSizeX / fTileCX  , (float)m_iTileSizeY / fTileCY, 0.f }; // 1-1
+			pTile->vSize = { (float)m_iTileSizeX / m_fTileCX , (float)m_iTileSizeY / m_fTileCY, 0.f }; // 1-1
 			pTile->byDrawID = m_iDrawID;
 			pTile->byOption = m_iOption;
 			fCenterX = float(j * m_iTileSizeX);
-			fCenterY = float(i * m_iTileSizeX);
+			fCenterY = float(i * m_iTileSizeY);
 			pTile->vPos = { fCenterX,fCenterY, 0.f };
 			m_vecTile.emplace_back(pTile);
 		}
@@ -143,6 +143,9 @@ HRESULT CTerrain::Ready_Terrain()
 
 void CTerrain::Render_Terrain()
 {
+	if (m_vecTile.empty())
+		return;
+
 	int iIndex = 0;
 	TCHAR szBuf[MAX_PATH] = L"";
 	RECT rcView = {};
@@ -171,33 +174,8 @@ void CTerrain::Render_Terrain()
 			Set_Ratio(matWorld, fRatioX, fRatioY);
 			CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0.f), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
-			CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
-		}
-	}
-}
-
-void CTerrain::MiniRender_Terrain()
-{
-	int iIndex = 0;
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			iIndex = j + (i * TILEX);
-			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_vecTile[iIndex]->byDrawID);
-			if (nullptr == pTexInfo)
-				return;
-
-			float fCenterX = float(pTexInfo->tImageInfo.Width >> 1);
-			float fCenterY = float(pTexInfo->tImageInfo.Height >> 1);
-
-			D3DXMATRIX matScale, matTrans, matWorld;
-			D3DXMatrixScaling(&matScale, m_vecTile[iIndex]->vSize.x, m_vecTile[iIndex]->vSize.y, 0.f);
-			D3DXMatrixTranslation(&matTrans, m_vecTile[iIndex]->vPos.x - m_pView->GetScrollPos(0), m_vecTile[iIndex]->vPos.y - m_pView->GetScrollPos(1), 0.f);
-			matWorld = matScale * matTrans;
-			Set_Ratio(matWorld, 0.3f, 0.3f);
-			CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
+			if (m_bText)
+				CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
 }

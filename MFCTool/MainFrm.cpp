@@ -8,7 +8,7 @@
 #include "MainFrm.h"
 #include "MFCToolView.h"
 #include "MyFormView.h"
-#include "MiniView.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -90,9 +90,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_MainSplitter.CreateStatic(this, 1, 2);
 	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMFCToolView), CSize(WINCX, WINCY), pContext);
 
-	m_SecondSplitter.CreateStatic(&m_MainSplitter, 2, 1, WS_VISIBLE | WS_CHILD, m_MainSplitter.IdFromRowCol(0, 1));
-	m_SecondSplitter.CreateView(0, 0, RUNTIME_CLASS(CMiniView), CSize(600, 300), pContext);
-	m_SecondSplitter.CreateView(1, 0, RUNTIME_CLASS(CMyFormView), CSize(600, 300), pContext);
+	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyFormView), CSize(600, WINCY), pContext);
 	
 	return TRUE;
 }
