@@ -40,6 +40,7 @@
 #include <map>
 #include <algorithm>
 #include <functional>
+#include <iostream>
 using namespace std;
 
 #include "d3d9.h"
@@ -65,4 +66,9 @@ using namespace std;
 #endif
 #endif
 
-
+// ÄÜ¼Öµð¹ö±ë
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
+#endif

@@ -3,7 +3,8 @@
 //
 
 #pragma once
-
+#include "MFCToolView.h"
+#include "MyFormView.h"
 class CMainFrame : public CFrameWnd
 {
 	
@@ -14,7 +15,8 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CSplitterWnd m_MainSplitter;
-
+	CMFCToolView* m_pToolView;
+	CMyFormView*  m_pFormView;
 // 작업입니다.
 public:
 

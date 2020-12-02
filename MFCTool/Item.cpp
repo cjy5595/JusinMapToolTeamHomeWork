@@ -16,9 +16,8 @@ CItem::~CItem()
 
 void CItem::AddItem(ITEMDATA * _pItem)
 {
-	ITEMDATA* pItem = new ITEMDATA(*_pItem);
-	m_vecItem.emplace_back(pItem);
-	Safe_Delete(pItem);
+	m_vecItem.emplace_back(new ITEMDATA(*_pItem));
+	//Safe_Delete(pItem);
 }
 
 void CItem::ItemRender(const wstring& _strImageKey, const wstring& _strImageState)
@@ -27,10 +26,6 @@ void CItem::ItemRender(const wstring& _strImageKey, const wstring& _strImageStat
 	m_pToolView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
 	D3DXMATRIX matScale, matTrans;
 																							
-																							/*CString str;
-																							wstring wstr;
-																							wstr  = str.operator LPCWSTR();*/
-
 	for (auto & pItme : m_vecItem)
 	{
 		const TEXINFO* pTexture = CTextureMgr::Get_Instance()->Get_TexInfo(_strImageKey, _strImageState, pItme->byDrawID);
