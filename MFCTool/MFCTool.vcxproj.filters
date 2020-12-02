@@ -61,6 +61,9 @@
     <Filter Include="소스 파일\05.Item">
       <UniqueIdentifier>{59a97196-4e39-44c0-b7b4-8589bb717d4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\01.View\05.FileInfo">
+      <UniqueIdentifier>{4fa8ed2f-b726-4cbb-90e9-3306dd5dbb74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -126,14 +129,14 @@
     <ClInclude Include="TileTool.h">
       <Filter>소스 파일\01.View\04.TileTool</Filter>
     </ClInclude>
-    <ClInclude Include="FileInfo.h">
-      <Filter>소스 파일\01.View\01.FormView</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>소스 파일\05.Item</Filter>
     </ClInclude>
     <ClInclude Include="ItemTool.h">
       <Filter>소스 파일\01.View\01.FormView</Filter>
+    </ClInclude>
+    <ClInclude Include="FileInfo.h">
+      <Filter>소스 파일\01.View\05.FileInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,14 +185,14 @@
     <ClCompile Include="TileTool.cpp">
       <Filter>소스 파일\01.View\04.TileTool</Filter>
     </ClCompile>
-    <ClCompile Include="FileInfo.cpp">
-      <Filter>소스 파일\01.View\01.FormView</Filter>
-    </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>소스 파일\05.Item</Filter>
     </ClCompile>
     <ClCompile Include="ItemTool.cpp">
       <Filter>소스 파일\01.View\01.FormView</Filter>
+    </ClCompile>
+    <ClCompile Include="FileInfo.cpp">
+      <Filter>소스 파일\01.View\05.FileInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
