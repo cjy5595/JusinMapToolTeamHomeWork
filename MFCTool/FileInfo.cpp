@@ -9,6 +9,7 @@ CFileInfo::CFileInfo()
 
 CFileInfo::~CFileInfo()
 {
+
 }
 
 CString CFileInfo::ConvertRelativePath(CString strFileFullPath)

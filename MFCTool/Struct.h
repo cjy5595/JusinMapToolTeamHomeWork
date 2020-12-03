@@ -16,21 +16,20 @@ typedef struct tagTile
 
 typedef struct tagItem
 {
-	tagItem(tagItem &_rItem){}
+	tagItem() {}
+	tagItem(tagItem &_rItem) {	strName = _rItem.strName;}
 #ifdef _AFX
 	CString strName;
 #else 
 	wstring strName;
 #endif
-	D3DXVECTOR3			vPos;
-	D3DXVECTOR3			vSize;
-	BYTE				byOption;
-	BYTE				byDrawID;
+	D3DXVECTOR3			vPos; //아이템 위치
+	D3DXVECTOR3			vSize; // 사이즈
+	BYTE				byOption; // 무기아이템인지 사용아이템인지
+	BYTE				byDrawID; // 무기 이미지 인덱스
 
-	int iAddHp;
-	int iAttack;
-	int iDef;
+	int iAddHp;		//추가되는 체력 스펙
+	int iAttack;	//공격
+	int iSpeed;		//
 	
-	BYTE byWeapon;
-	BYTE byItem;
 }ITEMDATA;

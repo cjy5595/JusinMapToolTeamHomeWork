@@ -24,10 +24,14 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 #endif
+
+
 public:
+
 	CMonsterTool m_tMonsterTool;
 	CTileTool	 m_tTileTool;
 	CItemTool	m_tItemTool;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 

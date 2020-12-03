@@ -14,14 +14,17 @@ protected: // serialization에서만 만들어집니다.
 	DECLARE_DYNCREATE(CMFCToolView)
 
 // 특성입니다.
+	
+
 public:
 	CMFCToolDoc* GetDocument() const;
 	//CTerrain* m_pTerrain;
 	CMyFormView * m_pFormView;
-	
+	CPoint		m_tGetMouse;
 // 작업입니다.
 public:
-
+	enum RENDERMODE { OBJECT_RENDER, TILE_RENDER, ITEM_RENDER, RENDER_END };
+	RENDERMODE	m_eRenderMode = RENDER_END;
 // 재정의입니다.
 public:
 	virtual void OnDraw(CDC* pDC);  // 이 뷰를 그리기 위해 재정의되었습니다.
@@ -47,6 +50,7 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MFCToolView.cpp의 디버그 버전

@@ -31,6 +31,7 @@ CTileTool::CTileTool(CWnd* pParent /*=NULL*/)
 
 CTileTool::~CTileTool()
 {
+	Safe_Delete(m_pTerrain);
 }
 
 void CTileTool::DoDataExchange(CDataExchange* pDX)

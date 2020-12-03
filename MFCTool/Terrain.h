@@ -23,8 +23,8 @@ private:
 	CMFCToolView* m_pView;
 	vector<TILE*> m_vecTile;
 public:
-	int m_fTileCX = 0;
-	int m_fTileCY = 0;
+	float m_fTileCX = 0;
+	float m_fTileCY = 0;
 	int m_iTileCountX = 0;
 	int m_iTileCountY = 0;
 
