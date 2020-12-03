@@ -182,10 +182,11 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
 	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
-	int iDrawID = pFormView->m_tTileTool.m_iDrawID;
+	int iDrawID = pFormView->m_tTileTool.m_iDrawID2;
 	pTerrain->TileChange(vMouse, iDrawID);
+	m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
 	
 	InvalidateRect(nullptr, FALSE);
 
-	CScrollView::OnLButtonDown(nFlags, point);
+	CView::OnLButtonDown(nFlags, point);
 }

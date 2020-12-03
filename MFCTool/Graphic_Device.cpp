@@ -73,11 +73,18 @@ HRESULT CGraphic_Device::Ready_Graphic_Device()
 		ERR_MSG(L"Font Creating failed");
 		return E_FAIL;
 	}
+	if (FAILED(D3DXCreateLine(m_pDevice, &m_pLine)))
+	{
+		ERR_MSG(L"Line Creating failed");
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
 void CGraphic_Device::Release_Graphic_Device()
 {
+	if (m_pLine)
+		m_pLine->Release();
 	if (m_pFont)
 		m_pFont->Release();
 	if (m_pSprite)

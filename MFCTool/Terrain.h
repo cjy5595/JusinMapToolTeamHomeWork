@@ -35,6 +35,7 @@ public:
 	int m_iOption = 0;
 
 	bool m_bText = false;
+	bool m_bGrid = false;
 
 };
 

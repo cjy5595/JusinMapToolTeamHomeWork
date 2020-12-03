@@ -43,7 +43,6 @@ void CTerrain::TileChange(const D3DXVECTOR3 & vMousePos, const BYTE & byDrawID, 
 		return;
 	m_vecTile[iIndex]->byDrawID = byDrawID;
 	m_vecTile[iIndex]->byOption = byOption;
-
 }
 
 int CTerrain::GetTile(const D3DXVECTOR3 & vMousePos)
@@ -59,55 +58,65 @@ int CTerrain::GetTile(const D3DXVECTOR3 & vMousePos)
 
 bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & iIndex)
 {
-	//////////////////////////내적을 이용한 방법.////////////////////////////////////////////////
-	// 챕터 1. 마름모꼴을 구해내라!
+	
+	float x = float(vPos.x / m_iTileSizeX);
+	float y = float(vPos.y / m_iTileSizeY);
+	int iIdx = (int)(y * m_iTileCountX + x);
 
-	D3DXVECTOR3 vVertex[4] =
-	{
-		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
-		{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
-	};
-	// 챕터 2. 방향벡터 그것도 마름모꼴의 방향벡터. 
-
-	D3DXVECTOR3 vVertexDir[4] =
-	{
-		vVertex[1] - vVertex[0],
-		vVertex[2] - vVertex[1],
-		vVertex[3] - vVertex[2],
-		vVertex[0] - vVertex[3],
-
-	};
-
-	//챕터 3. 법선벡터를 뽑아내자!!! 
-	D3DXVECTOR3 vBubsun[4] =
-	{
-		{ -vVertexDir[0].y, vVertexDir[0].x, 0.f },
-		{ -vVertexDir[1].y, vVertexDir[1].x, 0.f },
-		{ -vVertexDir[2].y, vVertexDir[2].x, 0.f },
-		{ -vVertexDir[3].y, vVertexDir[3].x, 0.f }
-	};
-
-	// 챕터 4. 마름모꼴 정점에서 마우스를 바라보는 방향벡터를 구하자!!!! 
-
-	D3DXVECTOR3 vMouseDir[4];
-	for (int i = 0; i < 4; ++i)
-		vMouseDir[i] = vPos - vVertex[i];
-
-	for (int i = 0; i < 4; ++i)
-	{
-		D3DXVec3Normalize(&vBubsun[i], &vBubsun[i]);
-		D3DXVec3Normalize(&vMouseDir[i], &vMouseDir[i]);
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		if (0 < D3DXVec3Dot(&vMouseDir[i], &vBubsun[i]))
-			return false;
-	}
+	if (0 > iIdx || (size_t)iIdx >= m_vecTile.size())
+		return false;
 
 	return true;
+
+	////////////////////////////내적을 이용한 방법.////////////////////////////////////////////////
+	//// 챕터 1. 마름모꼴을 구해내라!
+
+	//D3DXVECTOR3 vVertex[4] =
+	//{
+	//	{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
+	//};
+	//// 챕터 2. 방향벡터 그것도 마름모꼴의 방향벡터. 
+
+	//D3DXVECTOR3 vVertexDir[4] =
+	//{
+	//	vVertex[1] - vVertex[0],
+	//	vVertex[2] - vVertex[1],
+	//	vVertex[3] - vVertex[2],
+	//	vVertex[0] - vVertex[3],
+
+	//};
+
+	////챕터 3. 법선벡터를 뽑아내자!!! 
+	//D3DXVECTOR3 vBubsun[4] =
+	//{
+	//	{ -vVertexDir[0].y, vVertexDir[0].x, 0.f },
+	//	{ -vVertexDir[1].y, vVertexDir[1].x, 0.f },
+	//	{ -vVertexDir[2].y, vVertexDir[2].x, 0.f },
+	//	{ -vVertexDir[3].y, vVertexDir[3].x, 0.f }
+	//};
+
+	//// 챕터 4. 마름모꼴 정점에서 마우스를 바라보는 방향벡터를 구하자!!!! 
+
+	//D3DXVECTOR3 vMouseDir[4];
+	//for (int i = 0; i < 4; ++i)
+	//	vMouseDir[i] = vPos - vVertex[i];
+
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	D3DXVec3Normalize(&vBubsun[i], &vBubsun[i]);
+	//	D3DXVec3Normalize(&vMouseDir[i], &vMouseDir[i]);
+	//}
+
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	if (0 < D3DXVec3Dot(&vMouseDir[i], &vBubsun[i]))
+	//		return false;
+	//}
+
+	//return true;
 }
 
 HRESULT CTerrain::Ready_Terrain()
@@ -176,6 +185,20 @@ void CTerrain::Render_Terrain()
 			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0.f), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 			if (m_bText)
 				CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+			CGraphic_Device::Get_Instance()->Get_Sprite()->End();
+			
+			D3DXVECTOR2 vLinePos[5] =
+			{ { fCenterX -m_fTileCX * 0.5f, fCenterY - m_fTileCY * 0.5f },
+			{ fCenterX + m_fTileCX * 0.5f, fCenterY - m_fTileCY * 0.5f },
+			{ fCenterX + m_fTileCX * 0.5f, fCenterY + m_fTileCY * 0.5f },
+			{ fCenterX - m_fTileCX * 0.5f, fCenterY + m_fTileCY * 0.5f },
+			{ fCenterX - m_fTileCX * 0.5f, fCenterY - m_fTileCY * 0.5f } };
+			if (m_bGrid)
+			{
+				CGraphic_Device::Get_Instance()->Get_Line()->SetWidth(5);
+				CGraphic_Device::Get_Instance()->Get_Line()->Draw(vLinePos, 5, D3DCOLOR_ARGB(200, 255, 200, 0));
+			}
+			CGraphic_Device::Get_Instance()->Get_Sprite()->Begin(D3DXSPRITE_ALPHABLEND);
 		}
 	}
 }

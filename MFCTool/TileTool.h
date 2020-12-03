@@ -39,7 +39,10 @@ public:
 	int m_iDrawID2;
 	afx_msg void OnBnClickedCheckViewIndex();
 	CButton m_ViewIndex;
+	CButton m_CheckGrid;
 	afx_msg void OnBnClickedButtonSave();
 	afx_msg void OnBnClickedButtonLoad();
 	afx_msg void OnBnClickedButtonDeleteAll();
+	afx_msg void OnBnClickedButtonDelete();
+	afx_msg void OnBnClickedCheckViewGrid();
 };

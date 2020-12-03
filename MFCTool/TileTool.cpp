@@ -44,6 +44,7 @@ void CTileTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2, m_iTileCountY);
 	DDX_Text(pDX, IDC_EDIT6, m_iDrawID2);
 	DDX_Control(pDX, IDC_CHECK2, m_ViewIndex);
+	DDX_Control(pDX, IDC_CHECK3, m_CheckGrid);
 }
 
 
@@ -55,6 +56,8 @@ BEGIN_MESSAGE_MAP(CTileTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON4, &CTileTool::OnBnClickedButtonSave)
 	ON_BN_CLICKED(IDC_BUTTON5, &CTileTool::OnBnClickedButtonLoad)
 	ON_BN_CLICKED(IDC_BUTTON6, &CTileTool::OnBnClickedButtonDeleteAll)
+	ON_BN_CLICKED(IDC_BUTTON1, &CTileTool::OnBnClickedButtonDelete)
+	ON_BN_CLICKED(IDC_CHECK3, &CTileTool::OnBnClickedCheckViewGrid)
 END_MESSAGE_MAP()
 
 
@@ -266,6 +269,27 @@ void CTileTool::OnBnClickedButtonDeleteAll()
 
 	m_pTerrain->Release_Terrain();
 	SAFE_DELETE(m_pTerrain);
+
+	pView->InvalidateRect(nullptr, FALSE);
+	UpdateData(FALSE);
+}
+
+
+void CTileTool::OnBnClickedButtonDelete()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CTileTool::OnBnClickedCheckViewGrid()
+{
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
+	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
+	if (BST_CHECKED == m_CheckGrid.GetCheck())
+		pFormView->m_tTileTool.m_pTerrain->m_bGrid = true;
+	else if (BST_UNCHECKED == m_CheckGrid.GetCheck())
+		pFormView->m_tTileTool.m_pTerrain->m_bGrid = false;
 
 	pView->InvalidateRect(nullptr, FALSE);
 	UpdateData(FALSE);
