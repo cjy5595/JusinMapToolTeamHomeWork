@@ -13,7 +13,7 @@ public:
 public:
 	void TileChange(const D3DXVECTOR3& vMousePos, const BYTE& byDrawID, const BYTE& byOption = 0);
 	int GetTile(const D3DXVECTOR3& vMousePos);
-	bool IsPicking(const D3DXVECTOR3& vPos, const int& iIndex);
+	bool IsPicking(const D3DXVECTOR3 & vPos, const int & byDrawID, const BYTE & byOption = 0);
 public:
 	HRESULT Ready_Terrain();
 	void	Render_Terrain();

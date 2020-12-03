@@ -82,26 +82,29 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 		m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
 	
 
-	const TEXINFO* pTexture = CTextureMgr::Get_Instance()->Get_TexInfo(L"Item", L"Weapon", 2);
-	float fX = float(pTexture->tImageInfo.Width >> 1);
-	float fY = float(pTexture->tImageInfo.Height >> 1);
-	D3DXMATRIX matTrans;
-	D3DXMatrixTranslation(&matTrans,
-		float(m_tGetMouse.x) - GetScrollPos(0),
-		float(m_tGetMouse.y) - GetScrollPos(1),
-		0.f);
 
-	CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matTrans);
-	CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexture->pTexture, nullptr, &D3DXVECTOR3(fX, fY, 0.f), nullptr, D3DCOLOR_ARGB(100, 255, 255, 255));
 	switch (m_eRenderMode)
 	{
 	case CMFCToolView::OBJECT_RENDER:
 		break;
 	case CMFCToolView::TILE_RENDER:
+	{
+	
+	}
 		break;
 	case CMFCToolView::ITEM_RENDER:
 	{
-		
+		const TEXINFO* pTexture = CTextureMgr::Get_Instance()->Get_TexInfo(L"Item", L"Weapon", m_pFormView->m_tItemTool.m_pInstantData->byDrawID);
+		float fX = float(pTexture->tImageInfo.Width >> 1);
+		float fY = float(pTexture->tImageInfo.Height >> 1);
+		D3DXMATRIX matTrans;
+		D3DXMatrixTranslation(&matTrans,
+			float(m_tGetMouse.x),
+			float(m_tGetMouse.y),
+			0.f);
+
+		CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matTrans);
+		CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexture->pTexture, nullptr, &D3DXVECTOR3(fX, fY, 0.f), nullptr, D3DCOLOR_ARGB(100, 255, 255, 255));
 	}
 	break;
 	case CMFCToolView::RENDER_END:
@@ -205,17 +208,21 @@ void CMFCToolView::OnInitialUpdate()
 void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	D3DXVECTOR3 vMouse = { (float)point.x +GetScrollPos(0), (float)point.y + GetScrollPos(1), 0.f };
+	D3DXVECTOR3 vMouse = { (float)point.x -GetScrollPos(0), (float)point.y - GetScrollPos(1), 0.f };
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
 	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
 
 	if (!pTerrain)
 		return;
-	int iDrawID = pFormView->m_tTileTool.m_iDrawID;
-	pTerrain->TileChange(vMouse, iDrawID);
-	InvalidateRect(nullptr, FALSE);
 
+	if (TILE_RENDER == m_eRenderMode)
+	{
+		int iDrawID = pFormView->m_tTileTool.m_iDrawID2;
+		pTerrain->IsPicking(vMouse, iDrawID);
+	}
+	Invalidate(FALSE);
+	//InvalidateRect(nullptr, FALSE);
 	CView::OnLButtonDown(nFlags, point);
 }
 

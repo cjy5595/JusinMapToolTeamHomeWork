@@ -32,8 +32,8 @@ HRESULT CGraphic_Device::Ready_Graphic_Device()
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 
-	d3dpp.BackBufferWidth = 800;
-	d3dpp.BackBufferHeight = 600;
+	d3dpp.BackBufferWidth = WINCX;
+	d3dpp.BackBufferHeight = WINCY;
 	d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
 	d3dpp.BackBufferCount = 1;
 

@@ -41,7 +41,7 @@ void CTerrain::TileChange(const D3DXVECTOR3 & vMousePos, const BYTE & byDrawID, 
 
 	if (-1 == iIndex)
 		return;
-	m_vecTile[iIndex]->byDrawID = byDrawID;
+ 	m_vecTile[iIndex]->byDrawID = byDrawID;
 	m_vecTile[iIndex]->byOption = byOption;
 }
 
@@ -56,16 +56,17 @@ int CTerrain::GetTile(const D3DXVECTOR3 & vMousePos)
 	return -1;
 }
 
-bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & iIndex)
+bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & byDrawID, const BYTE & byOption)
 {
-	
 	float x = float(vPos.x / m_iTileSizeX);
 	float y = float(vPos.y / m_iTileSizeY);
-	int iIdx = (int)(y * m_iTileCountX + x);
+	int iIdx = ((int)y * m_iTileCountX + (int)x);
 
 	if (0 > iIdx || (size_t)iIdx >= m_vecTile.size())
 		return false;
 
+	m_vecTile[iIdx]->byDrawID = byDrawID;
+	m_vecTile[iIdx]->byOption = byOption;
 	return true;
 
 	////////////////////////////내적을 이용한 방법.////////////////////////////////////////////////
@@ -73,10 +74,10 @@ bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & iIndex)
 
 	//D3DXVECTOR3 vVertex[4] =
 	//{
-	//	{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x, m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y, 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
+	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
 	//};
 	//// 챕터 2. 방향벡터 그것도 마름모꼴의 방향벡터. 
 
@@ -168,7 +169,7 @@ void CTerrain::Render_Terrain()
 		{
 			iIndex = j + (i * m_iTileCountX);
 			swprintf_s(szBuf, L"%d", iIndex);
-			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_iDrawID);
+			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_vecTile[iIndex]->byDrawID);
 			if (nullptr == pTexInfo)
 				return;
 

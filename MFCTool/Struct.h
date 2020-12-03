@@ -10,7 +10,7 @@ typedef struct tagTile
 {
 	D3DXVECTOR3 vPos;
 	D3DXVECTOR3 vSize;
-	BYTE byDrawID;
+	int byDrawID;
 	BYTE byOption;
 }TILE;
 

@@ -93,6 +93,7 @@ void CTileTool::OnLbnSelchangePicture()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
+
 	CString strFileName;
 	int iIndex = m_ListBox.GetCurSel();
 	if (LB_ERR == iIndex)
@@ -129,6 +130,8 @@ void CTileTool::OnLbnSelchangePicture()
 	CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0.f), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 	CGraphic_Device::Get_Instance()->Render_End(m_Picture.m_hWnd);
 
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::TILE_RENDER;
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->Invalidate(FALSE);
 	UpdateData(FALSE);
 }
 
