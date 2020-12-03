@@ -35,89 +35,23 @@ void CTerrain::Set_Ratio(D3DXMATRIX matWorld, float fRatioX, float fRatioY)
 	matWorld._42 *= fRatioY;
 }
 
-void CTerrain::TileChange(const D3DXVECTOR3 & vMousePos, const BYTE & byDrawID, const BYTE & byOption)
+void CTerrain::TileChange(const D3DXVECTOR3 & vPos, const int & byDrawID, const BYTE & byOption)
 {
-	int iIndex = GetTile(vMousePos);
-
-	if (-1 == iIndex)
+	if (m_vecTile.empty())
 		return;
- 	m_vecTile[iIndex]->byDrawID = byDrawID;
-	m_vecTile[iIndex]->byOption = byOption;
-}
 
-int CTerrain::GetTile(const D3DXVECTOR3 & vMousePos)
-{
-	size_t iSize = m_vecTile.size();
-	for (size_t i = 0; i < iSize; ++i)
-	{
-		if (IsPicking(vMousePos, i))
-			return i;
-	}
-	return -1;
-}
-
-bool CTerrain::IsPicking(const D3DXVECTOR3 & vPos, const int & byDrawID, const BYTE & byOption)
-{
-	float x = float(vPos.x / m_iTileSizeX);
-	float y = float(vPos.y / m_iTileSizeY);
-	int iIdx = ((int)y * m_iTileCountX + (int)x);
+	//float x = float(vPos.x / m_iTileSizeX);
+	//float y = float(vPos.y / m_iTileSizeY);
+	float x = float(vPos.x / m_tTerrainInfo.iTileSizeX);
+	float y = float(vPos.y / m_tTerrainInfo.iTileSizeY);
+	int iIdx = ((int)y * m_tTerrainInfo.iTileCountX + (int)x);
 
 	if (0 > iIdx || (size_t)iIdx >= m_vecTile.size())
-		return false;
+		return;
 
 	m_vecTile[iIdx]->byDrawID = byDrawID;
 	m_vecTile[iIdx]->byOption = byOption;
-	return true;
 
-	////////////////////////////내적을 이용한 방법.////////////////////////////////////////////////
-	//// 챕터 1. 마름모꼴을 구해내라!
-
-	//D3DXVECTOR3 vVertex[4] =
-	//{
-	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y - (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x + (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//	{ m_vecTile[iIndex]->vPos.x - (m_iTileSizeX / m_fTileCX * 0.5f), m_vecTile[iIndex]->vPos.y + (m_iTileSizeY / m_fTileCY * 0.5f), 0.f },
-	//};
-	//// 챕터 2. 방향벡터 그것도 마름모꼴의 방향벡터. 
-
-	//D3DXVECTOR3 vVertexDir[4] =
-	//{
-	//	vVertex[1] - vVertex[0],
-	//	vVertex[2] - vVertex[1],
-	//	vVertex[3] - vVertex[2],
-	//	vVertex[0] - vVertex[3],
-
-	//};
-
-	////챕터 3. 법선벡터를 뽑아내자!!! 
-	//D3DXVECTOR3 vBubsun[4] =
-	//{
-	//	{ -vVertexDir[0].y, vVertexDir[0].x, 0.f },
-	//	{ -vVertexDir[1].y, vVertexDir[1].x, 0.f },
-	//	{ -vVertexDir[2].y, vVertexDir[2].x, 0.f },
-	//	{ -vVertexDir[3].y, vVertexDir[3].x, 0.f }
-	//};
-
-	//// 챕터 4. 마름모꼴 정점에서 마우스를 바라보는 방향벡터를 구하자!!!! 
-
-	//D3DXVECTOR3 vMouseDir[4];
-	//for (int i = 0; i < 4; ++i)
-	//	vMouseDir[i] = vPos - vVertex[i];
-
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	D3DXVec3Normalize(&vBubsun[i], &vBubsun[i]);
-	//	D3DXVec3Normalize(&vMouseDir[i], &vMouseDir[i]);
-	//}
-
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	if (0 < D3DXVec3Dot(&vMouseDir[i], &vBubsun[i]))
-	//		return false;
-	//}
-
-	//return true;
 }
 
 HRESULT CTerrain::Ready_Terrain()
@@ -125,25 +59,33 @@ HRESULT CTerrain::Ready_Terrain()
 	// 일단. 우리 규칙 찾자. 
 	float fCenterX = 0.f, fCenterY = 0.f;
 	TILE* pTile = nullptr;
-	m_vecTile.reserve(m_iTileCountX * m_iTileCountY);
+	m_tTerrainInfo.iTotalCount = m_tTerrainInfo.iTileCountX *  m_tTerrainInfo.iTileCountY;
+	m_vecTile.reserve(m_tTerrainInfo.iTotalCount);
 	const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_iDrawID);
 	if (nullptr == pTexInfo)
 		return E_FAIL;
 
-	m_fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
-	m_fTileCY = float(pTexInfo->tImageInfo.Height);
+	//m_fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
+	//m_fTileCY = float(pTexInfo->tImageInfo.Height);
 
-	for (int i = 0; i < m_iTileCountY; ++i)
+	for (int i = 0; i < m_tTerrainInfo.iTileCountX; ++i)
 	{
-		for (int j = 0; j < m_iTileCountX; ++j)
+		for (int j = 0; j < m_tTerrainInfo.iTileCountY; ++j)
 		{
 			pTile = new TILE;
-			pTile->vSize = { (float)m_iTileSizeX / m_fTileCX , (float)m_iTileSizeY / m_fTileCY, 0.f }; // 1-1
+			pTile->fTileCX = float(pTexInfo->tImageInfo.Width); // 1-1 픽셀단위로 크기를 넣으면 비율에 맞게 사이즈를 정할수 있음.
+			pTile->fTileCY = float(pTexInfo->tImageInfo.Height);
+			pTile->iTileSizeX = m_iTileSizeX;
+			pTile->iTileSizeY = m_iTileSizeY;
+			m_tTerrainInfo.iTileSizeX = m_iTileSizeX;
+			m_tTerrainInfo.iTileSizeY = m_iTileSizeY;
+
+			pTile->vSize = { (float)m_iTileSizeX / pTile->fTileCX , (float)m_iTileSizeY / pTile->fTileCY, 0.f }; // 1-1
 			pTile->byDrawID = m_iDrawID;
 			pTile->byOption = m_iOption;
 			fCenterX = float(j * m_iTileSizeX);
 			fCenterY = float(i * m_iTileSizeY);
-			pTile->vPos = { fCenterX,fCenterY, 0.f };
+			pTile->vPos = { fCenterX + ((float)m_iTileSizeX * 0.5f),fCenterY + ((float)m_iTileSizeY * 0.5f), 0.f };
 			m_vecTile.emplace_back(pTile);
 		}
 	}
@@ -163,11 +105,11 @@ void CTerrain::Render_Terrain()
 	SetRect(&rcView, 0, 0, rcView.right - rcView.left, rcView.bottom - rcView.top);
 	float fRatioX = float(WINCX) / rcView.right;
 	float fRatioY = float(WINCY) / rcView.bottom;
-	for (int i = 0; i < m_iTileCountY; ++i)
+	for (int i = 0; i < m_tTerrainInfo.iTileCountY; ++i)
 	{
-		for (int j = 0; j < m_iTileCountX; ++j)
+		for (int j = 0; j < m_tTerrainInfo.iTileCountX; ++j)
 		{
-			iIndex = j + (i * m_iTileCountX);
+			iIndex = j + (i * m_tTerrainInfo.iTileCountX);
 			swprintf_s(szBuf, L"%d", iIndex);
 			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_TexInfo(L"Terrain", L"Tile", m_vecTile[iIndex]->byDrawID);
 			if (nullptr == pTexInfo)

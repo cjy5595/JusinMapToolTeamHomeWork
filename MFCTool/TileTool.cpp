@@ -146,8 +146,8 @@ void CTileTool::OnBnClickedButtonCreateTile()
 		CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
 
 		m_pTerrain = new CTerrain;
-		m_pTerrain->m_iTileCountX = m_iTileCountX;
-		m_pTerrain->m_iTileCountY = m_iTileCountY;
+		m_pTerrain->m_tTerrainInfo.iTileCountX = m_iTileCountX;
+		m_pTerrain->m_tTerrainInfo.iTileCountY = m_iTileCountY;
 		m_pTerrain->m_iTileSizeX = m_iTileSizeX;
 		m_pTerrain->m_iTileSizeY = m_iTileSizeY;
 		m_pTerrain->m_iDrawID = m_iDrawID;
@@ -209,6 +209,7 @@ void CTileTool::OnBnClickedButtonSave()
 		}
 		
 		DWORD dwByte = 0;
+		WriteFile(hFile, &m_pTerrain->m_tTerrainInfo, sizeof(TERRAININFO), &dwByte, nullptr);
 		for (auto& pTile : rvecTile)
 		{
 			WriteFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
@@ -223,6 +224,9 @@ void CTileTool::OnBnClickedButtonSave()
 void CTileTool::OnBnClickedButtonLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+	CMFCToolView* pView = dynamic_cast<CMFCToolView*>(pMain->m_MainSplitter.GetPane(0, 0));
 
 	CFileDialog Dlg(TRUE, L"dat", L"*.dat",
 		OFN_OVERWRITEPROMPT, L"Data File(*dat) | *.dat||",
@@ -231,6 +235,7 @@ void CTileTool::OnBnClickedButtonLoad()
 	GetCurrentDirectory(MAX_PATH, szPath);
 	PathRemoveFileSpec(szPath);
 	lstrcat(szPath, L"\\Data");
+
 	Dlg.m_ofn.lpstrInitialDir = szPath;
 	if (Dlg.DoModal())
 	{
@@ -243,9 +248,14 @@ void CTileTool::OnBnClickedButtonLoad()
 
 		if (m_pTerrain)
 			m_pTerrain->Release_Terrain();
+		
+		if (nullptr == m_pTerrain)
+			m_pTerrain = new CTerrain;
 
 		DWORD dwByte = 0;
 		TILE* pTile = nullptr;
+
+		ReadFile(hFile, &m_pTerrain->m_tTerrainInfo, sizeof(TERRAININFO), &dwByte, nullptr);
 
 		while (true)
 		{
@@ -255,12 +265,31 @@ void CTileTool::OnBnClickedButtonLoad()
 			if (0 == dwByte)
 			{
 				Safe_Delete(pTile);
-				return;
+				break;
 			}
-			m_pTerrain->Get_vecTile().emplace_back(pTile);
+			m_pTerrain->Set_TileData(pTile);
 		}
 		CloseHandle(hFile);
+		//m_pTerrain->Get_vecTile().reserve(m_pTerrain->m_tTerrainInfo.iTotalCount);
+		//m_pTerrain->Ready_Terrain();
+		m_pTerrain->Set_View(pView);
+
+		CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+		CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
+		m_iTileCountX = m_pTerrain->m_tTerrainInfo.iTileCountX;
+		m_iTileCountY = m_pTerrain->m_tTerrainInfo.iTileCountY;
+		m_iTileSizeX = m_pTerrain->m_tTerrainInfo.iTileSizeX;
+		m_iTileSizeY = m_pTerrain->m_tTerrainInfo.iTileSizeY;
+		
+		m_pTerrain->Set_View(pView);
+
+		pView->SetScrollSizes(MM_TEXT, CSize(m_iTileSizeX * m_iTileCountX, m_iTileSizeY * m_iTileCountY));
+		pView->Invalidate(false);
+
+		((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::TILE_RENDER;
+		Invalidate(FALSE);
 	}
+	UpdateData(FALSE);
 }
 
 

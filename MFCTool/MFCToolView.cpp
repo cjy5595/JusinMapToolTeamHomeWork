@@ -89,7 +89,8 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 		break;
 	case CMFCToolView::TILE_RENDER:
 	{
-	
+		if (m_pFormView->m_tTileTool.m_pTerrain)
+			m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
 	}
 		break;
 	case CMFCToolView::ITEM_RENDER:
@@ -113,7 +114,7 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 		break;
 	}
 	
-	
+	Invalidate(FALSE);
 	CGraphic_Device::Get_Instance()->Render_End();
 	
 }
@@ -167,9 +168,9 @@ void CMFCToolView::OnInitialUpdate()
 	CScrollView::OnInitialUpdate();
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	CMainFrame * pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
-
 	SetScrollSizes(MM_TEXT, CSize(WINCX , WINCY));
+
+	CMainFrame * pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 
 	RECT rcMainRect = {};
 	pMain->GetWindowRect(&rcMainRect);
@@ -180,7 +181,7 @@ void CMFCToolView::OnInitialUpdate()
 	int iGapX = rcMainRect.right - rcView.right;
 	int iGapY = rcMainRect.bottom - rcView.bottom;
 
-	pMain->SetWindowPos(nullptr, 0, 0, WINCX + iGapX, WINCY + iGapY, SWP_NOZORDER | SWP_NOMOVE);
+	pMain->SetWindowPos(nullptr, 0, 0, WINCX  + iGapX, WINCY + iGapY, SWP_NOZORDER | SWP_NOMOVE);
 	g_hWND = m_hWnd;
 
 	if (FAILED(CGraphic_Device::Get_Instance()->Ready_Graphic_Device()))
@@ -208,7 +209,7 @@ void CMFCToolView::OnInitialUpdate()
 void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	D3DXVECTOR3 vMouse = { (float)point.x -GetScrollPos(0), (float)point.y - GetScrollPos(1), 0.f };
+	D3DXVECTOR3 vMouse = { (float)point.x + GetScrollPos(0), (float)point.y + GetScrollPos(1), 0.f };
 	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
 	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
 	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
@@ -219,7 +220,7 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	if (TILE_RENDER == m_eRenderMode)
 	{
 		int iDrawID = pFormView->m_tTileTool.m_iDrawID2;
-		pTerrain->IsPicking(vMouse, iDrawID);
+		pTerrain->TileChange(vMouse, iDrawID);
 	}
 	Invalidate(FALSE);
 	//InvalidateRect(nullptr, FALSE);
@@ -230,7 +231,7 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 void CMFCToolView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	Invalidate(FALSE);
+	//Invalidate(FALSE);
 
 	CScrollView::OnMouseMove(nFlags, point);
 }

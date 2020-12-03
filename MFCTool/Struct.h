@@ -10,9 +10,22 @@ typedef struct tagTile
 {
 	D3DXVECTOR3 vPos;
 	D3DXVECTOR3 vSize;
+	int iTileSizeX;
+	int iTileSizeY;
+	float fTileCX;
+	float fTileCY;
 	int byDrawID;
 	BYTE byOption;
 }TILE;
+
+typedef struct tagTerrainInfo
+{
+	int	iTotalCount;
+	int iTileCountX;
+	int iTileCountY;
+	int iTileSizeX;
+	int iTileSizeY;
+}TERRAININFO;
 
 typedef struct tagItem
 {

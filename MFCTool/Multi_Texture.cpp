@@ -71,8 +71,6 @@ void CMulti_Texture::Release_Texture()
 			Safe_Delete(rTexInfo);
 		}
 		rPair.second.clear();
-		// 아뉘.. 애들아.. 끝이 아니지... 
-		//rPair.second.swap(vector<TEXINFO*>()); 
 		rPair.second.shrink_to_fit();
 	}
 }
