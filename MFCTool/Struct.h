@@ -30,7 +30,17 @@ typedef struct tagTerrainInfo
 typedef struct tagItem
 {
 	tagItem() {}
-	tagItem(tagItem &_rItem) {	strName = _rItem.strName;}
+	tagItem(tagItem &_rItem)  
+	{	
+		strName = _rItem.strName;
+		vSize = _rItem.vSize;
+		byOption = _rItem.byOption;
+		byDrawID = _rItem.byDrawID;
+		iAddHp = _rItem.iAddHp;
+		iAttack = _rItem.iAttack;
+		iSpeed = _rItem.iSpeed;
+
+	}
 #ifdef _AFX
 	CString strName;
 #else 

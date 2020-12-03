@@ -10,6 +10,7 @@ public:
 public:
 	void AddItem(ITEMDATA * _pItem);
 	void ItemRender(const wstring& _strImageKey , const wstring& _strImageState);
+	void RenewalInstantItem();
 	const ITEMDATA* NearItemFind();
 	void Release();
 public:
