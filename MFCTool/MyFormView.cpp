@@ -5,6 +5,7 @@
 #include "MFCTool.h"
 #include "MyFormView.h"
 #include "Item.h"
+#include "MainFrm.h"
 
 // CMyFormView
 
@@ -83,7 +84,6 @@ void CMyFormView::TileToolButton()
 void CMyFormView::ItemToolButton()
 {
 	
-
 	m_tItemTool.ShowWindow(SW_SHOW);
 }
 
@@ -150,6 +150,9 @@ void CMyFormView::InstanceItemDataLoad()
 		strName.Format(_T("%d"), i);
 		m_tItemTool.m_InstantList.AddString(strName);
 	}
+
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::ITEM_RENDER;
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::RENDER_END;
 
 	CloseHandle(hFile);
 }
