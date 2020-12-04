@@ -92,6 +92,7 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	{
 		if (m_pFormView->m_tTileTool.m_pTerrain)
 			m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
+		Invalidate(FALSE);
 	}
 		break;
 	case CMFCToolView::ITEM_RENDER:
@@ -107,15 +108,15 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 
 		CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matTrans);
 		CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexture->pTexture, nullptr, &D3DXVECTOR3(fX, fY, 0.f), nullptr, D3DCOLOR_ARGB(100, 255, 255, 255));
+		Invalidate(FALSE);
 	}
-	break;
+		break;
 	case CMFCToolView::RENDER_END:
 		break;
-	default:
-		break;
 	}
-	
 	Invalidate(FALSE);
+	
+
 	CGraphic_Device::Get_Instance()->Render_End();
 	
 }
@@ -218,15 +219,21 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	/*if (!pTerrain)
 		return;*/
 
+	if (ITEM_RENDER == m_eRenderMode)
+	{
+		pFormView->m_tItemTool.m_pItemManager->AddItem(pFormView->m_tItemTool.m_pInstantData);
+	}
+
 	if (TILE_RENDER == m_eRenderMode)
 	{
 		int iDrawID = pFormView->m_tTileTool.m_iDrawID2;
 		pTerrain->TileChange(vMouse, iDrawID);
 	}
-	if (ITEM_RENDER == m_eRenderMode)
-	{
-		pFormView->m_tItemTool.m_pItemManager->AddItem(pFormView->m_tItemTool.m_pInstantData);
-	}
+
+	if (RENDER_END == m_eRenderMode)
+		Invalidate(FALSE);
+
+
 	Invalidate(FALSE);
 	//InvalidateRect(nullptr, FALSE);
 	CView::OnLButtonDown(nFlags, point);

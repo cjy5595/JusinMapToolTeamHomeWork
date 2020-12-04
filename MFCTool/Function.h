@@ -16,8 +16,7 @@ struct DeleteMap
 		if (Temp.second)
 		{
 			delete Temp.second;
-			Temp.second = nullptr;
-		}
+			Temp.second = nullptr;		}
 	}
 };
 

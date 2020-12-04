@@ -127,7 +127,7 @@ void CTerrain::Render_Terrain()
 			CGraphic_Device::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 			CGraphic_Device::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture, nullptr, &D3DXVECTOR3(fCenterX, fCenterY, 0.f), nullptr, D3DCOLOR_ARGB(255, 255, 255, 255));
 			if (m_bText)
-				CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, 0, D3DCOLOR_ARGB(255, 255, 255, 255));
+				CGraphic_Device::Get_Instance()->Get_Font()->DrawTextW(CGraphic_Device::Get_Instance()->Get_Sprite(), szBuf, lstrlen(szBuf), nullptr, DT_LEFT, D3DCOLOR_ARGB(255, 255, 255, 255));
 			CGraphic_Device::Get_Instance()->Get_Sprite()->End();
 			
 			D3DXVECTOR2 vLinePos[5] =
