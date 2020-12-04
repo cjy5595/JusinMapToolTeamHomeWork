@@ -183,8 +183,8 @@ void CMFCToolView::OnInitialUpdate()
 	int iGapY = rcMainRect.bottom - rcView.bottom;
 
 	pMain->SetWindowPos(nullptr, 0, 0, WINCX  + iGapX, WINCY + iGapY, SWP_NOZORDER | SWP_NOMOVE);
+	
 	g_hWND = m_hWnd;
-
 	if (FAILED(CGraphic_Device::Get_Instance()->Ready_Graphic_Device()))
 	{
 		ERR_MSG(L"Ready Graphic Device failed");

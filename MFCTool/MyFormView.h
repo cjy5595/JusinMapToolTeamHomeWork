@@ -41,6 +41,8 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void TileToolButton();
 	afx_msg void ItemToolButton();
+	afx_msg void InstanceItemDataSave();
+	afx_msg void InstanceItemDataLoad();
 };
 
 

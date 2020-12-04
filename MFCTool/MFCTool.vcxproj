@@ -85,6 +85,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -203,6 +205,7 @@
     <ClInclude Include="MFCTool.h" />
     <ClInclude Include="MFCToolDoc.h" />
     <ClInclude Include="MFCToolView.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterTool.h" />
     <ClInclude Include="Multi_Texture.h" />
     <ClInclude Include="MyFormView.h" />
@@ -226,6 +229,7 @@
     <ClCompile Include="MFCTool.cpp" />
     <ClCompile Include="MFCToolDoc.cpp" />
     <ClCompile Include="MFCToolView.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterTool.cpp" />
     <ClCompile Include="Multi_Texture.cpp" />
     <ClCompile Include="MyFormView.cpp" />

@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "MFCTool.h"
 #include "MyFormView.h"
-
+#include "Item.h"
 
 // CMyFormView
 
@@ -30,6 +30,8 @@ BEGIN_MESSAGE_MAP(CMyFormView, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMyFormView::MonsterToolButton)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMyFormView::TileToolButton)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMyFormView::ItemToolButton)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMyFormView::InstanceItemDataSave)
+	ON_BN_CLICKED(IDC_BUTTON5, &CMyFormView::InstanceItemDataLoad)
 END_MESSAGE_MAP()
 
 
@@ -80,5 +82,74 @@ void CMyFormView::TileToolButton()
 
 void CMyFormView::ItemToolButton()
 {
+	
+
 	m_tItemTool.ShowWindow(SW_SHOW);
+}
+
+
+void CMyFormView::InstanceItemDataSave()
+{
+	if (!m_tItemTool.m_pItemManager)
+		return;
+	UpdateData(TRUE);
+	HANDLE hFile = CreateFile(L"../Data/InstanceItem.dat", 
+		GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		return;
+	}
+	DWORD dwByte = 0;
+	auto & iter = m_tItemTool.m_pItemManager->GetItemVec()->begin();
+	auto & iter_end = m_tItemTool.m_pItemManager->GetItemVec()->end();
+	for (iter; iter != iter_end; ++iter)
+	{
+		WriteFile(hFile, *iter, sizeof(ITEMDATA), &dwByte, NULL);
+	}
+	CloseHandle(hFile);
+	UpdateData(FALSE);
+
+}
+
+
+void CMyFormView::InstanceItemDataLoad()
+{
+	if (!m_tItemTool.m_pItemManager)
+		return;
+
+
+	
+	HANDLE hFile = CreateFile(L"../Data/InstanceItem.dat",
+		GENERIC_READ, 0, nullptr, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		return;
+	}
+	DWORD		dwByte;
+	while (true)
+	{
+		ITEMDATA* pItem = new ITEMDATA;
+		ReadFile(hFile, pItem, sizeof(ITEMDATA), &dwByte, NULL);
+
+		if (dwByte == 0)
+		{
+			Safe_Delete(pItem);
+			break;
+		}
+
+		m_tItemTool.m_pItemManager->GetItemVec()->emplace_back(pItem);
+
+	}
+
+	CString strName;
+	m_tItemTool.m_InstantList.ResetContent();
+	for (size_t i = 0; i < m_tItemTool.m_pItemManager->GetItemVec()->size(); ++i)
+	{
+		strName.Format(_T("%d"), i);
+		m_tItemTool.m_InstantList.AddString(strName);
+	}
+
+	CloseHandle(hFile);
 }

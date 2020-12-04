@@ -1,5 +1,6 @@
 #pragma once
 
+
 typedef struct tagTexInfo
 {
 	LPDIRECT3DTEXTURE9 pTexture;
@@ -32,7 +33,6 @@ typedef struct tagItem
 	tagItem() {}
 	tagItem(tagItem &_rItem)  
 	{	
-		strName = _rItem.strName;
 		vSize = _rItem.vSize;
 		byOption = _rItem.byOption;
 		byDrawID = _rItem.byDrawID;

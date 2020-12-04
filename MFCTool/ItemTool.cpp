@@ -59,6 +59,7 @@ BEGIN_MESSAGE_MAP(CItemTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON10, &CItemTool::ReadyInstantButton)
 	ON_WM_DESTROY()
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON9, &CItemTool::vecIndexDeleteButton)
 END_MESSAGE_MAP()
 
 
@@ -137,13 +138,80 @@ void CItemTool::ItemAddButton()
 
 void CItemTool::SaveButton()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	HANDLE hFile = CreateFile(L"../Data/Item.dat", GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		ERR_MSG(L"통로 개방 실패.");
+		return;
+	}
+	DWORD dwByte = 0;
+	DWORD dwStringSize = 0;
+
+	for (auto& rPair : m_mapItemData)
+	{
+		dwStringSize = sizeof(wchar_t) * (rPair.second->strName.GetLength() + 1);
+		WriteFile(hFile, &dwStringSize, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, rPair.second->strName.GetString(), dwStringSize, &dwByte, nullptr);
+		WriteFile(hFile, &rPair.second->iAddHp, sizeof(int), &dwByte, nullptr);
+		WriteFile(hFile, &rPair.second->iAttack, sizeof(int), &dwByte, nullptr);
+		WriteFile(hFile, &rPair.second->iSpeed, sizeof(int), &dwByte, nullptr);
+		WriteFile(hFile, &rPair.second->byOption, sizeof(BYTE), &dwByte, nullptr);
+		WriteFile(hFile, &rPair.second->byDrawID, sizeof(BYTE), &dwByte, nullptr);
+	}
+	
+	CloseHandle(hFile);
+
 }
 
 
 void CItemTool::LoadButton()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	
+	
+	HANDLE hFile = CreateFile(L"../Data/Item.dat", GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		ERR_MSG(L"통로 개방 실패.");
+		return;
+	}
+		DWORD dwByte = 0;
+		DWORD dwStringSize = 0;
+
+		for_each(m_mapItemData.begin(), m_mapItemData.end(), DeleteMap());
+		m_mapItemData.clear();
+		m_AddListBox.ResetContent();
+		TCHAR* pTemp = nullptr;
+		while (true)
+		{
+			ITEMDATA* pItemData = new ITEMDATA;
+			ReadFile(hFile, &dwStringSize, sizeof(DWORD), &dwByte, nullptr);
+			
+			pTemp = new TCHAR[dwStringSize];
+			ReadFile(hFile, pTemp, dwStringSize, &dwByte, nullptr);
+			ReadFile(hFile, &pItemData->iAddHp, sizeof(int), &dwByte, nullptr);
+			ReadFile(hFile, &pItemData->iAttack, sizeof(int), &dwByte, nullptr);
+			ReadFile(hFile, &pItemData->iSpeed, sizeof(int), &dwByte, nullptr);
+			ReadFile(hFile, &pItemData->byOption, sizeof(BYTE), &dwByte, nullptr);
+			ReadFile(hFile, &pItemData->byDrawID, sizeof(BYTE), &dwByte, nullptr);
+
+			if (0 == dwByte)
+			{
+				SAFE_DELETE(pItemData);
+				if (pTemp)
+				{
+					delete[] pTemp;
+					pTemp = nullptr;
+				}
+				break;
+			}
+			pItemData->strName = pTemp;
+			m_mapItemData.emplace(pItemData->strName, pItemData);
+			m_AddListBox.AddString(pItemData->strName);
+			SAFE_DELETE(pTemp);
+			
+		}
+		CloseHandle(hFile);
 }
 
 
@@ -202,8 +270,7 @@ void CItemTool::AddListBox()
 		ERR_MSG(L"아이템 정보 스트링네임이 없음.");
 		return;
 	}
-	//m_pInstantData = iter->second;
-
+	
 	m_strItemName = iter->second->strName;
 	m_iAddHp = iter->second->iAddHp;
 	m_iAddAtk = iter->second->iAttack;
@@ -234,7 +301,10 @@ void CItemTool::AddListBox()
 
 void CItemTool::InstantList()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
+	
+	UpdateData(FALSE);
 }
 
 
@@ -315,4 +385,37 @@ void CItemTool::OnClose()
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::RENDER_END;
 	CDialog::OnClose();
+}
+
+
+void CItemTool::vecIndexDeleteButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	CString strName;
+
+	int iSelect = m_InstantList.GetCurSel();
+	if (m_pItemManager->GetItemVec()->empty())
+		return;
+	
+	for (size_t i = 0; i < m_pItemManager->GetItemVec()->size(); ++i)
+	{
+		if (iSelect == i)
+		{
+			SAFE_DELETE(*(m_pItemManager->GetItemVec()->begin() + i));
+			m_pItemManager->GetItemVec()->erase(m_pItemManager->GetItemVec()->begin() + i);
+			m_InstantList.DeleteString(iSelect);
+			m_InstantList.ResetContent();
+			break;
+		}
+	}
+	
+	for (size_t i = 0; i < m_pItemManager->GetItemVec()->size(); ++i)
+	{
+		strName.Format(_T("%d"), i);
+		m_InstantList.AddString(strName);
+	}
+
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->Invalidate(FALSE);
+	UpdateData(FALSE);
 }

@@ -69,4 +69,5 @@ public:
 	afx_msg void ReadyInstantButton();
 
 	afx_msg void OnClose();
+	afx_msg void vecIndexDeleteButton();
 };

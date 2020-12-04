@@ -63,8 +63,8 @@ HRESULT CGraphic_Device::Ready_Graphic_Device()
 
 	D3DXFONT_DESCW tFontInfo;
 	ZeroMemory(&tFontInfo, sizeof(D3DXFONT_DESCW));
-	tFontInfo.Height = 8;
-	tFontInfo.Width = 4;
+	tFontInfo.Height = 20;
+	tFontInfo.Width = 10;
 	tFontInfo.Weight = FW_HEAVY;
 	tFontInfo.CharSet = HANGUL_CHARSET;
 	lstrcpy(tFontInfo.FaceName, L"¸¼Àº °íµñ");
