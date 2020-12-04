@@ -16,7 +16,9 @@ CItem::~CItem()
 
 void CItem::AddItem(ITEMDATA * _pItem)
 {
-	m_vecItem.emplace_back(new ITEMDATA(*_pItem));
+	ITEMDATA* pItme = new ITEMDATA(*_pItem);
+	pItme->vPos = D3DXVECTOR3((float)GetMouse().x, (float)GetMouse().y, 0.f);
+	m_vecItem.emplace_back(pItme);
 	//Safe_Delete(pItem);
 }
 
@@ -29,6 +31,12 @@ void CItem::ItemRender(const wstring& _strImageKey, const wstring& _strImageStat
 	for (auto & pItme : m_vecItem)
 	{
 		const TEXINFO* pTexture = CTextureMgr::Get_Instance()->Get_TexInfo(_strImageKey, _strImageState, pItme->byDrawID);
+		if (!pTexture)
+		{
+			ERR_MSG(L" 텍스처 못찾음 ");
+			return;
+		}
+			
 		float fX = float(pTexture->tImageInfo.Width >> 1);
 		float fY = float(pTexture->tImageInfo.Height >> 1);
 		D3DXMatrixScaling(&matScale, 1.f, 1.f, 0.f);

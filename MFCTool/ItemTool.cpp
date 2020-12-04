@@ -57,6 +57,8 @@ BEGIN_MESSAGE_MAP(CItemTool, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST3, &CItemTool::InstantList)
 	ON_EN_CHANGE(IDC_EDIT8, &CItemTool::SearchDataEditBox)
 	ON_BN_CLICKED(IDC_BUTTON10, &CItemTool::ReadyInstantButton)
+	ON_WM_DESTROY()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -304,4 +306,13 @@ void CItemTool::ReadyInstantButton()
 	((CMainFrame*)AfxGetMainWnd())->m_pToolView->Invalidate(FALSE);
 	UpdateData(FALSE);
 
+}
+
+
+
+void CItemTool::OnClose()
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	((CMainFrame*)AfxGetMainWnd())->m_pToolView->m_eRenderMode = CMFCToolView::RENDER_END;
+	CDialog::OnClose();
 }

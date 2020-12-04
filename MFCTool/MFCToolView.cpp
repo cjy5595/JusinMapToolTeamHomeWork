@@ -81,7 +81,8 @@ void CMFCToolView::OnDraw(CDC* /*pDC*/)
 	if(m_pFormView->m_tTileTool.m_pTerrain)
 		m_pFormView->m_tTileTool.m_pTerrain->Render_Terrain();
 	
-
+	if (m_pFormView->m_tItemTool.m_pItemManager)
+		m_pFormView->m_tItemTool.m_pItemManager->ItemRender(L"Item", L"Weapon");
 
 	switch (m_eRenderMode)
 	{
@@ -213,13 +214,17 @@ void CMFCToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	CMyFormView* pFormView = dynamic_cast<CMyFormView*>(pMain->m_MainSplitter.GetPane(0, 1));
 	CTerrain* pTerrain = pFormView->m_tTileTool.m_pTerrain;
 
-	if (!pTerrain)
-		return;
+	/*if (!pTerrain)
+		return;*/
 
 	if (TILE_RENDER == m_eRenderMode)
 	{
 		int iDrawID = pFormView->m_tTileTool.m_iDrawID2;
 		pTerrain->IsPicking(vMouse, iDrawID);
+	}
+	if (ITEM_RENDER == m_eRenderMode)
+	{
+		pFormView->m_tItemTool.m_pItemManager->AddItem(pFormView->m_tItemTool.m_pInstantData);
 	}
 	Invalidate(FALSE);
 	//InvalidateRect(nullptr, FALSE);
